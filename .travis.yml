@@ -1,0 +1,37 @@
+sudo: required
+
+language: node_js
+node_js:
+  - 8
+
+env:
+  global:
+    - SLS_DEBUG=true
+
+cache:
+  yarn: true
+
+install:
+  - yarn global add serverless
+  - pip install awscli --upgrade --user
+  - chmod +x ./travis/*.sh 
+
+# script:
+script:
+  - yarn install
+  - yarn test
+  - serverless config credentials --provider aws --key ${AWS_ACCESS_KEY_ID} --secret ${AWS_SECRET_ACCESS_KEY}
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: ./travis/deploy.sh staging
+    on:
+      branch: develop
+
+  - provider: script
+    skip_cleanup: true
+    script: ./travis/deploy.sh prod
+    on:
+      branch: master
+
