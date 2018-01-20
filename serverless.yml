@@ -78,6 +78,33 @@ functions:
       - prod
       - staging
     handler: handler.helloLambda
+    memorySize: 256
+    description: Create a new member with basic info
+    events:
+      - http:
+          path: /hello
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
+          private: true
+          request:
+            parameters:
+              headers:
+                Country: true
+                Language: true
+                x-api-key: true
+              body:       
+          response:
+            statusCodes:
+              200:
     environment:
       NODE_ENV: ${self:custom.stage}
 
